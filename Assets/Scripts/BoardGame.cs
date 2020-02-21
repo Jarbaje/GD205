@@ -11,7 +11,7 @@ public class BoardGame : MonoBehaviour
     Vector3 initPos;
 
     //Arrays for hazards and tokens. Size adjusted in Unity
-    public Transform [] hazard,
+    public GameObject [] hazard,
                         token;
 
     //x, y, and z positions of player, hazards, and tokens.
@@ -52,7 +52,7 @@ public class BoardGame : MonoBehaviour
         {
              xh[i] = Random.Range(0,8);
              zh[i] = Random.Range(0,8);
-             hazard[i].position = new Vector3 (xh[i], y, zh[i]);
+             hazard[i].transform.position = new Vector3 (xh[i], y, zh[i]);
         }
 
         // Gives a random value to each x and z object in the xt and zt array
@@ -61,7 +61,7 @@ public class BoardGame : MonoBehaviour
         {
              xt[i] = Random.Range(0,8);
              zt[i] = Random.Range(0,8);
-             token[i].position = new Vector3 (xt[i], y, zt[i]);
+             token[i].transform.position = new Vector3 (xt[i], y, zt[i]);
         }
     }
 
@@ -111,16 +111,16 @@ public class BoardGame : MonoBehaviour
             resetPlayer.Play();
             for (int i = 0; i < token.Length; i++)
             {
-                if(token[i].position.y < 1)
+                if(token[i].transform.position.y < 1)
                 {
-                    token[i].position += new Vector3 (0,3,0);
+                    token[i].transform.position += new Vector3 (0,3,0);
                 }
             }
         }
 
         for (int i = 0; i < hazard.Length; i++) { //check for collision against in-game hazards
 
-            if (hazard[i].position == player.transform.position) 
+            if (hazard[i].transform.position == player.transform.position) 
             {
                 player.transform.position = initPos;
                 hazardSound.Play();
@@ -130,11 +130,12 @@ public class BoardGame : MonoBehaviour
         //check for collection of in-game tokens
         for (int i = 0; i < token.Length; i++) {
 
-            if (token[i].position == player.transform.position) 
+            if (token[i].transform.position == player.transform.position) 
             {
                 player.transform.localScale += new Vector3 (0,1,0);
-                token[i].position += new Vector3 (0, -3, 0);
+                token[i].transform.position += new Vector3 (0, -3, 0);
                 tokenSound.Play();
+                hazard[i].GetComponent<Renderer>().material.color = Color.black;
             }
         }
     }
